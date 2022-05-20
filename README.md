@@ -1,25 +1,27 @@
 # GetDiscogsRelease
 
-## Objective
-Given the release id extract the corresponding record.
+## Description
+Given a Discogs release id this extracts the corresponding record from the Discogs release file. Exists in both Windows and Linux versions.
 
-## Repository
-The files GetDiscogsRelease.exe, GetDiscogsRelease and fmt.dll were compiled by Visual Studio 2022. The source C++ and CMake files are available. The user may modify these and recompile. The .ps1 and .sh script files are not compiled so may also be modified by the user. Any changes are at the user's own risk. 
+## This Repository
+The build files are `GetDiscogsRelease.exe` and `fmt.dll` on the Windows side and `GetDiscogsRelease` on the Linux side. These were compiled in Visual Studio 2022. The source C++ and CMake files are also available. The executables are invoked by the PowerShell script `PS_GetDiscogsRelease.ps1` which runs on Windows or Linux. If PowerShell is not available in Linux the bash script `AB_GetDiscogsRelease.sh` may be used instead.
 
 ## Input
-Discogs release files are found at http://data.discogs.com/. The input file is unzipped the Discogs release file. No data validation is performed on the input file. The file is assumed to be a valid .xml file. The release record for a given id n is the data between (and including) the tags <release id="n"> and </release>. These tags are assumed to exist and to be well-formed. The ids in the file are assumed to be unique and in increasing order and not longer than 10 digits.
+Discogs release files are found at [Discogs Data](http://data.discogs.com/). The input file for this process is the unzipped Discogs release file, typically named `discogs_release_yyyymmdd.xml`. The file is assumed to be a valid .xml file in which all necessary tags are assumed to exist and to be well-formed. The release ids are assumed to be unique and in increasing order and not longer than 10 digits. These assumptions are not validated by this process.
+
+Each release in the Discogs database has its own webpage whose url has the form `discogs.com/release/n-...` where `n` is the release id. The id is also displayed at the top right of the page with the label Release. Note that the id is a numeric identifier not a database position: id 100 does not mean the 100<sup>th</sup> record in the database. The contents of the release record are the underlying xml data which the page displays. 
 
 ## Output
-The output file containing the release record is an .xml file with name discogs_ID_n.xml where n is the search id.
+The release record for id `n` consists of the data between (and including) the tags `<release id="n">` and the subsequent `</release>`. This is written to a file named `discogs_ID_n.xml`.
 
 ## Installation
-In Windows the source files are GetDiscogsRelease.exe, fmt.dll and PS_GetDiscogsRelease.ps1. In Linux they are GetDiscogsRelease and either or both of PS_GetDiscogsRelease.ps1 and AB_GetDiscogsRelease.sh. The user may copy the source files to whatever folder they choose. The source files must all reside in the same folder. The source files may be renamed by the user subject to their retaining the same root name (e.g. xyz.exe and PS_xyz.ps1); fmt.dll may not be renamed. The .ps1 and .sh scripts are not compiled so may be modified (at the user's own risk).
+The user need only copy the set of source files to whatever folder they choose. In Windows this set consists of the files `GetDiscogsRelease.exe`, `fmt.dll` and `PS_GetDiscogsRelease.ps1`. In Linux the files are `GetDiscogsRelease` and either or both of `PS_GetDiscogsRelease.ps1` and `AB_GetDiscogsRelease.sh`. The files must all reside in the same folder. The file root name GetDiscogsRelease may be changed by the user but must be the same for script and build files (e.g. `abc.exe` and `PS_abc.ps1`). Neither file extensions nor prefixes ("PS_" or "AB_") may be changed; `fmt.dll` may not be renamed.
 
 ## Operation
-The PowerShell script PS_GetDiscogsRelease.ps1 parses and validates its arguments which are then passed to the executable. It can be used in either Windows or Linux. If PowerShell is not available in Linux the alternative bash script AB_GetDiscogsRelease.sh can be used instead. It attempts to replicate the PowerShell script functionality. It is possible to invoke the executable directly, but this is not recommended as the user is then solely responsible for ensuring that the arguments are valid and passed in the correct order. The argument syntax for the PowerShell script follows the PowerShell conventions, so optional arguments may be entered in any order or may be omitted. Help for the script is available via Get-Help or by supplying the -? argument. The Common Parameter -v (verbose) is also available and displays the full output folder path.
+The PowerShell script `PS_GetDiscogsRelease.ps1` parses and validates its arguments which are then passed to the executable. It is possible to invoke the executable directly, but this is not recommended as the user is then solely responsible for ensuring that the arguments are valid and passed in the correct order. The argument syntax for the PowerShell script follows the PowerShell conventions, so optional arguments may be entered in any order or may be omitted. Help for the script is available via `Get-Help` or by supplying the `-?` argument. The Common Parameter `-v` (verbose) is also available and displays the full output folder path.
 
 ## Arguments
-The PowerShell script takes 8 arguments. The first 2 are mandatory and positional. The last 6 optional. Positional arguments in PowerShell do not need to be preceded by the parameter name (e.g. -input_file or -i) but if both parameter names are omitted then input_file must precede release_id.
+The PowerShell script takes 8 arguments. The first 2 are mandatory and positional. The last 6 are optional. Positional arguments in PowerShell do not need to be preceded by the parameter name (e.g. `-input_file` or `-i`) but if both parameter names are omitted then `input_file` must precede `release_id`.
 
 input_file 		The discogs release file (full path including the file name). 
 release_id 		The id of the release record to be extracted.
