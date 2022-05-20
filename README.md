@@ -1,10 +1,6 @@
-[GetDiscogsRelease]:(# GetDiscogsRelease)
+# GetDiscogsRelease
 
-# [GDR](/#/about#GDR)
-
-# <a id="GDR"></a> GDR
-My favorite search engine is [Duck Duck Go](https://duckduckgo.com).
-## [Objective](#objective)
+## Objective
 Given the release id extract the corresponding record.
 
 ## Repository
