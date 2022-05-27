@@ -31,7 +31,7 @@ In Windows this set consists of the files `GetDiscogsRelease.exe`, `fmt.dll` and
 
  In Linux the files are `GetDiscogsRelease` and either or both of `PS_GetDiscogsRelease.ps1` and `AB_GetDiscogsRelease.sh`. 
  
- The executable and script files must reside in the same folder. The file root name `GetDiscogsRelease` may be changed by the user but must be the same for the executable and script files (e.g. `abc.exe` and `PS_abc.ps1`). Neither file extensions nor prefixes ("PS_" or "AB_") may be changed; `fmt.dll` may not be renamed.
+ The executable and script files must reside in the same folder. The file root name `GetDiscogsRelease` may be changed by the user but must be the same for the executable and script files (e.g. `abc.exe` and `PS_abc.ps1`). Neither file extensions nor prefixes (`PS_` or `AB_`) may be changed; `fmt.dll` may not be renamed.
 
 ## Operation
 The PowerShell script `PS_GetDiscogsRelease.ps1` parses and validates its arguments which are then passed to the executable. The argument syntax for the script follows the PowerShell conventions. Help is available via `Get-Help` or by supplying the `-?` argument. The Common Parameter `-v` (verbose) is also available and displays the full output folder path if included.
@@ -95,8 +95,8 @@ The program reads the block at the start of the file and records the first id. I
 The non-zero codes which may be returned are as follows:
 | Error | Description |
 | ----- | ----------- |
-| 10 |	Failed to open input file. |
-| 20 |	Id larger than the largest id in the input file (or no ids in the file). |
-| 30 |	Id not found in the input file. |
-| 40 |	Release record for id not complete (no closing tag). |
-| 50 |	Failed to open output file. |
+| `10` |	Failed to open input file. |
+| `20` |	Id larger than the largest id in the input file (or no ids in the file). |
+| `30` |	Id not found in the input file. |
+| `40` |	Release record for id not complete (no closing tag). |
+| `50` |	Failed to open output file. |
