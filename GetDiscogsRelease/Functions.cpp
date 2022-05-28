@@ -3,9 +3,10 @@
 #include "Functions.h"
 
 long long GetBlockSize(char* argv)
-//	Bitshift operator is << (e.g. 1 << 18 = 2^18 = 262,144).
-//	The external argument parser supplies a bitshift default argument of 18. 
-//	Block size must exceed the length of the longest release in the input file (currently 68,436).
+//	Bitshift operator is << (e.g. 1 << 21 = 2^21 = 2,097,152 bytes = 2 MiB).
+//	The external argument parser supplies a bitshift default argument of 21. 
+//	Block size must exceed double the length of the longest release in the
+//	input file (currently 850,000 bytes).
 {
 	return static_cast<long long>(1) << std::stoi(argv);
 }
@@ -38,10 +39,10 @@ bool OpenInputFile(std::ifstream& file_in, const std::string path_in_full)
 
 bool InitializeInterval(std::ifstream& XML_input, const long long size, long long& pos_1, long long& pos_2, long long& pos_z,
 	const int id, int& id_1, int& id_2)
-	//	If there is no complete release id in the file then SearchForward fails and the program is terminated.
-	//	If SearchForward finds a complete release id then SearchBackward will also and there will exist a first 
-	//  and a last release id (although they need not be distinct) and corresponding position numbers.
-	//	Use tellg() to get the file size and record it. The read block size may not exceed the file size.
+//	If there is no complete release id in the file then SearchForward fails and the program is terminated.
+//	If SearchForward finds a complete release id then SearchBackward will also and there will exist a first 
+//	and a last release id (although they need not be distinct) and corresponding position numbers.
+//	Use tellg() to get the file size and record it. The read block size may not exceed the file size.
 {
 	long long pos_ext_1{ 0 };
 	long long pos_ext_2{ XML_input.tellg() };
@@ -142,11 +143,10 @@ bool SearchBackward(std::ifstream& XML_input, const long long size, const long l
 }
 
 bool ReadBlock(std::ifstream& XML_input, std::vector<char>& block, const long long size, const long long pos)
-//	Read file to block.
+//	Read from the file a block of the given size beginning at position pos. 
 {
 	try
 	{
-		// Read a block of the given size beginning at position pos. 
 		XML_input.seekg(pos);
 		XML_input.read(block.data(), size);
 		if (XML_input.fail()) throw "Input file read failure.";
@@ -162,7 +162,7 @@ bool ReadBlock(std::ifstream& XML_input, std::vector<char>& block, const long lo
 
 bool ID_Endpoint(const int id, const int id_1, const int id_2, const long long pos_1, const long long pos_2,
 	long long& pos_0)
-	//	Return true if release id is a search interval endpoint. Assign position.
+//	Return true if release id is a search interval endpoint. Record the corresponding position.
 {
 	if (id == id_1)
 	{
@@ -182,7 +182,7 @@ bool ID_Endpoint(const int id, const int id_1, const int id_2, const long long p
 bool LocateNextRecord(std::ifstream& XML_input, const bool binary_search, bool search_backward,
 	const long long sizeB, double dA, const int id, const int id_1, const int id_2,
 	const long long pos_1, const long long pos_2, int& id_a, long long& pos_a)
-	//	Locate the next guess at the release id position in the search interval [id_1, id_2].
+//	Locate the next guess at the release id position in the search interval [id_1, id_2].
 {
 	// Next position is interpolated between positions 1 and 2. For binary search the default is dA = 0.5.
 	if (!binary_search) dA = IntervalFraction(id, id_1, id_2);
@@ -229,7 +229,7 @@ double IntervalFraction(const int i, const int i1, const int i2)
 
 void UpdateInterval(const int id, int& id_1, int& id_2, long long& pos_1, long long& pos_2,
 	const int id_a, const long long pos_a)
-	//	Update the search interval positions and id values.
+//	Update the search interval positions and id values.
 {
 	if (id_a >= id)
 	{
@@ -246,7 +246,7 @@ void UpdateInterval(const int id, int& id_1, int& id_2, long long& pos_1, long l
 
 void UpdateMarkers(std::vector<int>& markers, std::vector<size_t>& marker_widths, const int i_count,
 	const int id_1, const int id_2, const int id_a, const bool detailed_output)
-	//	Update search interval markers.
+//	Update search interval markers.
 {
 	if (!detailed_output) return;
 

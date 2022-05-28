@@ -1,4 +1,6 @@
-﻿// GetDiscogsRelease.cpp : Given a discogs release id write the entire release record to a file.
+﻿//	GetDiscogsRelease.
+//	Given a discogs release id write the corresponding release record to a file.
+//	May 2022.
 
 #include "GetDiscogsRelease.h"
 #include "Constants.h"
@@ -40,11 +42,18 @@ int main(int, char* argv[])
 	if (!OpenInputFile(XML_input, XML_PathIn_Full)) return 10;
 	if (!InitializeInterval(XML_input, sizeB, pos_1, pos_2, pos_z, id, id_1, id_2)) return 20;
 
+	//	For the case in which the id is the first or last in the file:
+	//	1. Run UpdateMarkers. Otherwise control exits the loop before it is run even once.
+	//	2. Increment i_count to 2. Otherwise WriteMarkers produces no output.
+	UpdateMarkers(markers, marker_widths, 1, id_1, id_2, id, detailed_output);
+
 	// Search for release id.
 	while (true)
 	{
 		SetIteration(i_count, id_a, pos_a, search_backward);
-		if (ID_Endpoint(id, id_1, id_2, pos_1, pos_2, pos_0)) break;
+		if (ID_Endpoint(id, id_1, id_2, pos_1, pos_2, pos_0)) {
+			if (i_count == 1) { i_count++; }
+			break;}
 		if (!LocateNextRecord(XML_input, binary_search, search_backward, sizeB, dA, id, id_1, id_2,
 			pos_1, pos_2, id_a, pos_a)) return 30;
 		UpdateMarkers(markers, marker_widths, i_count, id_1, id_2, id_a, detailed_output);
