@@ -82,6 +82,7 @@ Once the arguments have been parsed and validated the executable is called. The 
 If PowerShell is not available in Linux this bash script may be used instead. It was created using the script generator [argbash](https://github.com/matejak/argbash) with some additional validation code added at the end. It uses the same argument names as the PowerShell script and attempts to replicate its functionality. 
  
 ## Executable functionality
+##### Arguments
 The executable reads the arguments as a C++ `argv[]` argument array. No validation of the arguments is performed. 
 
 ##### Reading data
