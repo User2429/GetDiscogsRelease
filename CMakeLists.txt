@@ -4,7 +4,7 @@
 cmake_minimum_required (VERSION 3.22)
 project ("GetDiscogsRelease")
 
-# Use C++ latest version (20) and below with CMAKE_CXX_FLAGS.
+# Use C++ latest version (23) and below with CMAKE_CXX_FLAGS.
 set(CMAKE_CXX_STANDARD 23)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 set(CMAKE_CXX_EXTENSIONS OFF)
