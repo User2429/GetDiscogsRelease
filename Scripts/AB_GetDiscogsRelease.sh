@@ -3,7 +3,7 @@
 # Created by argbash-init v2.10.0
 # ARG_OPTIONAL_SINGLE([output_folder],[o],[Optional. The folder to which the release record is written. If not supplied the release record is written to the folder where this script resides. If supplied it must exist and be a valid folder name, ending in a backslash, and may not include a file name. The executable creates a file name for the record of the form discogs_ID_n.xml where n is the release id.],[])
 # ARG_OPTIONAL_SINGLE([write_mode],[w],[Optional. If the output file already exists then write_mode must be supplied and may have values 'a' or 'o' to tell the executable to append to or overwrite the output file. If the output file does not exist then write-mode has no effect and may be omitted.],[])
-# ARG_OPTIONAL_SINGLE([size_block],[s],[Optional. Because the input file is too large to hold in memory the executable reads data in blocks. The block size must be greater than the length of the longest record in the file. The block size in bytes is 2^size_block, so for the default value of 18 this is 262,144. The longest record in the current input file is around 68,000. This parameter would be required if the file held a release record longer than 2^18.],[18])
+# ARG_OPTIONAL_SINGLE([size_block],[s],[Optional. Because the input file is too large to hold in memory the executable reads data in blocks. The block size must be greater than the twice the length of the longest record in the file (currently around 825 KB). The block size in bytes is 2^size_block, so for the default value of 23 this is 8 MiB. The minimum allowed is 21; the maximum is 30.],[23])
 # ARG_OPTIONAL_BOOLEAN([bisection_search],[b],[Switch parameter. If omitted the executable uses linear interpolation to find the requested release record. If included it uses the (slower) bisection search.],[])
 # ARG_OPTIONAL_BOOLEAN([detailed_output],[d],[Switch parameter. If included then extra output is produced. This displays the id intervals in which the executable searches for the requested id.],[])
 # ARG_OPTIONAL_BOOLEAN([no_check],[n],[Switch parameter. If omitted the script checks whether the executable and any other required files are in the same directory as this script. If included then the check is skipped.],[])
@@ -11,7 +11,7 @@
 # ARG_POSITIONAL_SINGLE([release_id],[Mandatory. The release id of the requested discogs release. Must be a positive integer. Positional (position 2; so must follow the input file).],[])
 # ARG_TYPE_GROUP([pint],[r],[release_id])
 # ARG_TYPE_GROUP_SET([w],[w],[write_mode],[a,o])
-# ARG_TYPE_GROUP_SET([s],[s],[size_block],[21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40])
+# ARG_TYPE_GROUP_SET([s],[s],[size_block],[21, 22, 23, 24, 25, 26, 27, 28, 29, 30])
 # ARG_DEFAULTS_POS([])
 # ARG_HELP([Argbash-based argument parsing script for GetDiscogsRelease executable.])
 # ARG_VERBOSE([v])
@@ -56,12 +56,12 @@ w()
 
 s()
 {
-	local _allowed=("18" "19" "20" "21" "22" "23" "24") _seeking="$1"
+	local _allowed=("21" "22" "23" "24" "25" "26" "27" "28" "29" "30") _seeking="$1"
 	for element in "${_allowed[@]}"
 	do
 		test "$element" = "$_seeking" && echo "$element" && return 0
 	done
-	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: '18', '19', '20', '21', '22', '23' and '24'" 4
+	die "Value '$_seeking' (of argument '$2') doesn't match the list of allowed values: '21', '22', '23', '24', '25', '26', '27', '28', '29' and '30'" 4
 }
 
 
@@ -79,7 +79,7 @@ _arg_release_id=
 # THE DEFAULTS INITIALIZATION - OPTIONALS
 _arg_output_folder=
 _arg_write_mode=
-_arg_size_block="18"
+_arg_size_block="23"
 _arg_bisection_search="off"
 _arg_detailed_output="off"
 _arg_no_check="off"
@@ -93,8 +93,8 @@ print_help()
 	printf '\t%s\n' "<input_file>: Mandatory. The Discogs xml file from which the particular release record is sought. Must be a complete path including the filename and extension. Positional (position 1)."
 	printf '\t%s\n' "<release_id>: Mandatory. The release id of the requested discogs release. Must be a positive integer. Positional (position 2; so must follow the input file)."
 	printf '\t%s\n' "-o, --output_folder: Optional. The folder to which the release record is written. If not supplied the release record is written to the folder where this script resides. If supplied it must exist and be a valid folder name, ending in a backslash, and may not include a file name. The executable creates a file name for the record of the form discogs_ID_n.xml where n is the release id. (no default)"
-	printf '\t%s\n' "-w, --write_mode: Optional. If the output file already exists then write_mode must be supplied and may have values 'a' or 'o' to tell the executable to append to or overwrite the output file. If the output file does not exist then write-mode has no effect and may be omitted.. Can be one of: 'a' and 'o' (no default)"
-	printf '\t%s\n' "-s, --size_block: Optional. Because the input file is too large to hold in memory the executable reads data in blocks. The block size must be greater than the length of the longest record in the file. The block size in bytes is 2^size_block, so for the default value of 18 this is 262,144. The longest record in the current input file is around 68,000. This parameter would be required if the file held a release record longer than 2^18.. Can be one of: '18', '19', '20', '21', '22', '23' and '24' (default: '18')"
+	printf '\t%s\n' "-w, --write_mode: Optional. If the output file already exists then write_mode must be supplied and may have values 'a' or 'o' to tell the executable to append to or overwrite the output file. If the output file does not exist then write-mode has no effect and may be omitted. Can be one of: 'a' and 'o' (no default)"
+	printf '\t%s\n' "-s, --size_block: Optional. Because the input file is too large to hold in memory the executable reads data in blocks. The block size must be greater than the twice the length of the longest record in the file (currently around 825 KB). The block size in bytes is 2^size_block, so for the default value of 23 this is 8 MiB. The minimum allowed is 21; the maximum is 30. Can be one of '21', '22', '23', '24', '25', '26', '27', '28', '29' and '30' (default: '23')"
 	printf '\t%s\n' "-b, --bisection_search, --no-bisection_search: Switch parameter. If omitted the executable uses linear interpolation to find the requested release record. If included it uses the (slower) bisection search. (off by default)"
 	printf '\t%s\n' "-d, --detailed_output, --no-detailed_output: Switch parameter. If included then extra output is produced. This displays the id intervals in which the executable searches for the requested id. (off by default)"
 	printf '\t%s\n' "-n, --no_check, --no-no_check: Switch parameter. If omitted the script checks whether the executable and any other required files are in the same directory as this script. If included then the check is skipped. (off by default)"

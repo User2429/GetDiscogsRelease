@@ -18,9 +18,9 @@ Each release in the Discogs database has its own webpage with a url of the form 
 The release record for id `n` consists of the input file data between (and including) the tags `<release id="n">` and the subsequent `</release>`. This record is written to the output file `discogs_ID_n.xml`.
 
 ## Installation
-The user need only copy the executable and script files to whatever folder they choose.<br>In Windows this set consists of the files `GetDiscogsRelease.exe`, `fmt.dll` and `PS_GetDiscogsRelease.ps1`.<br>In Linux the files are `GetDiscogsRelease` and either of `PS_GetDiscogsRelease.ps1` and `AB_GetDiscogsRelease.sh`. 
+The user need only copy the executable and script files to whatever folder they choose.<br>In Windows these are `GetDiscogsRelease.exe`, `fmt.dll` and `PS_GetDiscogsRelease.ps1`.<br>In Linux they are `GetDiscogsRelease` and either of `PS_GetDiscogsRelease.ps1` and `AB_GetDiscogsRelease.sh`. 
  
- The executable and script files must reside in the same folder. The file root name `GetDiscogsRelease` may be changed by the user but must be the same for the executable and script files (e.g. `abc.exe` and `PS_abc.ps1`). Neither file extensions nor prefixes (`PS_` or `AB_`) may be changed; `fmt.dll` may not be renamed.
+ The executable and script files must reside in the same folder. The file root name `GetDiscogsRelease` may be changed by the user but must be the same for the executable and the script files (e.g. `abc.exe` and `PS_abc.ps1`). File extensions may not be changed; `fmt.dll` may not be renamed.
 
 ## Operation
 The PowerShell script `PS_GetDiscogsRelease.ps1` parses and validates its arguments which are then passed to the executable. The argument syntax for the script follows the PowerShell conventions. Help is available via `Get-Help` or the `-?` argument. The Common Parameter `-v` (verbose) is also available and displays the full output folder path if included.
@@ -76,7 +76,7 @@ The executable reads the arguments as a C++ `argv[]` argument array. No validati
  
 
 ##### Reading data
-Because of the size of the input file (currently 68 GB) it must be read in blocks. A block must be large enough to ensure that it always contains at least one complete record, which means it must be twice the length of the longest record in the file (currently 825 KB). So the block size must be at least 1.65 MiB. The block size in bytes is given by 2<sup>`size_block`</sup>, so for the `size_block` default value of 23 this is 2<sup>23</sup> = 8 MiB. The minimum allowed value is 21, corresponding to a block size of 2<sup>21</sup> =  2 MiB.
+Because of the size of the input file (currently 68 GB) it must be read in blocks. A block must be large enough to ensure that it always contains at least one complete record, which means it must be twice the length of the longest record in the file (currently 825 KB). So the block size must be at least 1.65 MiB. The block size in bytes is given by 2<sup>`size_block`</sup>, so for the `size_block` default value of 23 this is 2<sup>23</sup> = 8 MiB. The minimum allowed value is 21, corresponding to a block size of 2<sup>21</sup> =  2 MiB. The maximum is 30, but the code runs faster for smaller values.
 
 ##### Search method
 The program finds the first and last ids in the file. These endpoint ids define the first search interval, which is assumed to bracket the search id, otherwise it is not in the file. The program then finds an intermediate id which is not an endpoint. This defines two subintervals, one of which must bracket the search id. This becomes the new search interval. This process continues until either the search id is found (as an endpoint of a new search interval) or is shown not be in the file (the search id is not an endpoint but the bracketing interval contains no other ids). New intermediate ids are found using either linear interpolation or bisection of the current interval (which is typically slower than linear interpolation). If the `detailed_output` parameter is included then the intermediate search ids and intervals are displayed on the screen.<br>If the search id is found the release record is written to the output file. 

@@ -21,7 +21,7 @@
  Optional. If the output file already exists then write_mode must be supplied and may have values 'a' or 'o' to tell the executable to append to or overwrite the output file. If the output file does not exist then write-mode has no effect and may be omitted.
 
 .PARAMETER size_block
- Optional. Because the input file is too large to hold in memory the executable reads data in blocks. A block must be large enough to ensure that it always contains a complete record, so must be twice the length of the longest record, which is currently around 825,000 bytes. The read block size in bytes is 2^size_block, so for the default value of 23 this is 8 MiB. The minimum allowed is 21, corresponding to 2 MiB.
+ Optional. Because the input file is too large to hold in memory the executable reads data in blocks. A block must be large enough to ensure that it always contains a complete record, so must be twice the length of the longest record, which is currently around 825,000 bytes. The read block size in bytes is 2^size_block, so for the default value of 23 this is 8 MiB. The minimum allowed is 21, corresponding to 2 MiB. The maximum is 30.
 
 .PARAMETER bisection_search
  Switch parameter. Omit to base the search method on linear interpolation. Include to use interval bisection.
@@ -78,7 +78,7 @@ Param(
     [Parameter(Mandatory, Position = 1)] [ValidateRange(1,[int]::MaxValue)] [int] $release_id,
     [Parameter()] [ValidateScript({Test-Path $_})] [System.IO.FileInfo] $output_folder,
     [Parameter()] [ValidateSet('a','o')] [string] $write_mode, 
-    [Parameter()] [ValidateRange(21,40)] [int] $size_block= 23,
+    [Parameter()] [ValidateRange(21,30)] [int] $size_block= 23,
     [Parameter()] [switch] $bisection_search,
     [Parameter()] [switch] $detailed_output,
     [Parameter()] [switch] $no_check)
