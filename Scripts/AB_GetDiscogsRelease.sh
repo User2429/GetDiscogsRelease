@@ -23,7 +23,7 @@
 # Argbash is FREE SOFTWARE, see https://argbash.io for more info
 
 
-set -euo pipefail  # This line added manually. Skipping -x which prints every executed command to the screen.
+set -euo pipefail  # This line added manually. Causes script to terminate on error. Skipping -x which prints every executed command to the screen.
 
 
 die()
@@ -92,9 +92,9 @@ print_help()
 	printf 'Usage: %s [-o|--output_folder <arg>] [-w|--write_mode <w>] [-s|--size_block <s>] [-b|--(no-)bisection_search] [-d|--(no-)detailed_output] [-n|--(no-)no_check] [-h|--help] [-v|--verbose] [--version] <input_file> <release_id>\n' "$0"
 	printf '\t%s\n' "<input_file>: Mandatory. The Discogs xml file from which the particular release record is sought. Must be a complete path including the filename and extension. Positional (position 1)."
 	printf '\t%s\n' "<release_id>: Mandatory. The release id of the requested discogs release. Must be a positive integer. Positional (position 2; so must follow the input file)."
-	printf '\t%s\n' "-o, --output_folder: Optional. The folder to which the release record is written. If not supplied the release record is written to the folder where this script resides. If supplied it must exist and be a valid folder name, ending in a backslash, and may not include a file name. The executable creates a file name for the record of the form discogs_ID_n.xml where n is the release id. (no default)"
-	printf '\t%s\n' "-w, --write_mode: Optional. If the output file already exists then write_mode must be supplied and may have values 'a' or 'o' to tell the executable to append to or overwrite the output file. If the output file does not exist then write-mode has no effect and may be omitted. Can be one of: 'a' and 'o' (no default)"
-	printf '\t%s\n' "-s, --size_block: Optional. Because the input file is too large to hold in memory the executable reads data in blocks. The block size must be greater than the twice the length of the longest record in the file (currently around 825 KB). The block size in bytes is 2^size_block, so for the default value of 23 this is 8 MiB. The minimum allowed is 21; the maximum is 30. Can be one of '21', '22', '23', '24', '25', '26', '27', '28', '29' and '30' (default: '23')"
+	printf '\t%s\n' "-o, --output_folder: Optional. The folder to which the release record is written. If not supplied the release record is written to the folder where this script resides. If supplied it must exist and be a valid folder name, ending in a backslash, and may not include a file name. The executable creates a file name for the record of the form discogs_ID_n.xml where n is the release id."
+	printf '\t%s\n' "-w, --write_mode: Optional. If the output file already exists then write_mode must be supplied and may have values 'a' or 'o' to tell the executable to append to or overwrite the output file. If the output file does not exist then write-mode has no effect and may be omitted. Can be one of: 'a' and 'o'"
+	printf '\t%s\n' "-s, --size_block: Optional. Because the input file is too large to hold in memory the executable reads data in blocks. The block size must be greater than the twice the length of the longest record in the file (currently around 825 KB). The block size in bytes is 2^size_block, so for the default value of 23 this is 8 MiB. The minimum allowed is 21; the maximum is 30."
 	printf '\t%s\n' "-b, --bisection_search, --no-bisection_search: Switch parameter. If omitted the executable uses linear interpolation to find the requested release record. If included it uses the (slower) bisection search. (off by default)"
 	printf '\t%s\n' "-d, --detailed_output, --no-detailed_output: Switch parameter. If included then extra output is produced. This displays the id intervals in which the executable searches for the requested id. (off by default)"
 	printf '\t%s\n' "-n, --no_check, --no-no_check: Switch parameter. If omitted the script checks whether the executable and any other required files are in the same directory as this script. If included then the check is skipped. (off by default)"

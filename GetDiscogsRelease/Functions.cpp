@@ -4,9 +4,6 @@
 
 long long GetBlockSize(char* argv)
 //	Bitshift operator is << (e.g. 1 << 21 = 2^21 = 2,097,152 bytes = 2 MiB).
-//	The external argument parser supplies a bitshift default argument of 21. 
-//	Block size must exceed double the length of the longest release in the
-//	input file (currently 850,000 bytes).
 {
 	return static_cast<long long>(1) << std::stoi(argv);
 }
@@ -15,13 +12,13 @@ bool GetBoolean(char* argv)
 //	Return boolean flag. 
 {
 	std::stringstream ss{ argv };
-	bool b;
+	bool b{ false };
 	ss >> std::boolalpha >> b;
 	return b;
 }
 
 bool OpenInputFile(std::ifstream& file_in, const std::string path_in_full)
-//	Open the input file at the end (ate) so that tellg() return the file size.
+//	Open the input file at the end (ate) so that tellg() returns the file size.
 {
 	try
 	{

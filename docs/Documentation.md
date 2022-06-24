@@ -10,7 +10,7 @@ The executable is invoked by the PowerShell script `PS_GetDiscogsRelease.ps1` wh
 The executable files in Releases were compiled under a CMake project in Visual Studio 2022 in the Windows environment.  This requires the prior installation of the x64 `fmt` library via the package manager `vcpkg`. Also required is a new Windows environmental variable `VCPKG_ROOT` which must be set to the path to the `vcpkg` folder and which is referenced in `CMakePresets.json`.
 
 ## Input file
-Discogs release files are found at [Discogs Data](http://data.discogs.com/). The input file for the current process is the unzipped Discogs release file, with name of the form `discogs_release_yyyymmdd.xml`. The file is assumed to be a valid `.xml` file in which all necessary tags are assumed to exist and to be well-formed. The release ids are assumed to be unique and in increasing order and not longer than 10 digits. These assumptions are not validated by the current process.
+Discogs release files are found at [Discogs Data](http://data.discogs.com/). The input file for the current process is the unzipped Discogs releases file, with name of the form `discogs_yyyymmdd_releases.xml`. The file is assumed to be a valid `xml` file in which all necessary tags are assumed to exist and to be well-formed. The release ids are assumed to be unique and in increasing order and not longer than 10 digits. These assumptions are not validated by the current process.
 
 Each release in the Discogs database has its own webpage with a url of the form `discogs.com/release/n-...` where `n` is the release id. The id is also displayed at the top right of the page next to the label `Release`. The contents of the release record are the underlying xml data which the page displays. 
 
@@ -63,11 +63,11 @@ This script performs type checking on the arguments and also validates the follo
  - `output_folder` must be a valid path not including a file name.
  - `output folder` must end in a backslash (if not the script adds it).
  - `write_mode` must have value `a` or `o` (append or overwrite) if it exists.
- - `size_block` must have an integer value between 21 and 40. The default is 23. 
+ - `size_block` must have an integer value between 21 and 30. The default is 23. 
 
 Once the arguments have been parsed and validated the executable is called. The script passes all arguments other than `no_check` to the executable in the required order. The script calls the executable and echoes the call on screen. 
 
-##### AB_GetDiscogs.sh
+##### AB_GetDiscogsRelease.sh
 If PowerShell is not available in Linux this bash script may be used instead. It was created using the script generator [argbash](https://github.com/matejak/argbash) with some additional validation code added at the end. It uses the same argument names as the PowerShell script and attempts to replicate its functionality. 
  
 ## Executable functionality
@@ -91,5 +91,5 @@ The non-zero return codes are as follows:
 | `40` |	Release record for id not complete (no closing tag). |
 | `50` |	Failed to open output file. |
 
-In PowerShell the executable return code may be retrieved from the variable `$LASTEXITCODE`. 
+In PowerShell the executable return code may be retrieved from the variable `$LastExitCode`. 
 If the bash script is used in Linux then the executable return code may be retrieved from the Linux variable `$?` but only immediately after the script has run as it will be overwritten by the return code from the next Linux command.

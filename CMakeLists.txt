@@ -13,7 +13,7 @@ if(MSVC)
   set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /std:c++latest")
   string(APPEND CMAKE_CXX_FLAGS " /Zc:__cplusplus")
 
-  # Force to always compile with W4.
+  # Force to always compile with Warning Level W4.
   if(CMAKE_CXX_FLAGS MATCHES "/W[0-4]")
 	string(REGEX REPLACE "/W[0-4]" "/W4" CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS}")
   else()
